@@ -20,6 +20,9 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,12 +48,74 @@ public class WorldCupFrame extends JFrame{
 		this.mainPanel.setLayout(new BorderLayout());
 		this.getContentPane().add(this.mainPanel);
 		
+		//Construct Menu
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		menuBar.add(createFileMenu());
+		menuBar.add(createEditMenu());
+
 		this.mainPanel.add(createSideButtonPanel(), BorderLayout.EAST);
 		this.mainPanel.add(createBottomPanel(), BorderLayout.SOUTH);
 		this.mainPanel.add(createTable(WorldCupController.getInstance().getPlayers()), 
 				BorderLayout.CENTER);	
 	}
 	
+
+	//Edit Menu
+	private JMenu createEditMenu() {
+		JMenu menu = new JMenu("Edit");
+		menu.add(createDeleteItem());
+		return menu;
+	}
+
+
+	//Edit->Delete
+	private JMenuItem createDeleteItem() {
+		JMenu menu = new JMenu("Delete");
+		
+		menu.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = table.getSelectedRow();
+				if(selectedRow >=0)
+				{
+					WorldCupController.getInstance().deletePlayer(selectedRow);
+				}
+				else
+				{
+					JFrame outerFrame = new JFrame();
+					JOptionPane.showMessageDialog(outerFrame, "Please Select a Contact");
+				}
+				
+			}
+		});
+		return menu;
+	}
+
+
+	private JMenu createFileMenu() {
+		JMenu menu = new JMenu("File");
+		menu.add(createFileExitItem());
+		return menu;
+	}
+
+	/**
+	 * Creates the File->Exit menu item and sets its action listener.
+	 * @return the menu item
+	 */
+	public JMenuItem createFileExitItem() {
+		JMenuItem item = new JMenuItem("Exit");
+		class MenuItemListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				System.exit(0);
+			}
+		}
+		ActionListener listener = new MenuItemListener();
+		item.addActionListener(listener);
+		return item;
+	}
+
+
+
 	private JScrollPane createTable(ArrayList<Player> players){
 		table = new JTable();
 		tableModel = new PlayerTableModel(players);

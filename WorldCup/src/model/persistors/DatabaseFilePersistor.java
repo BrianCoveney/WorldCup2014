@@ -37,7 +37,7 @@ public class DatabaseFilePersistor implements IPersistor{
 			
 			dbConnection=
 					DriverManager.getConnection("jdbc:mysql://localhost:3308/worldcup?"+
-							"user=root&password="); //enter password
+							"user=root&password=bossdog12"); //enter password
 			
 System.out.println("Database connection successful : "+dbConnection);
 			
