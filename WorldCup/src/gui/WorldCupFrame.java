@@ -94,10 +94,46 @@ public class WorldCupFrame extends JFrame{
 	private JMenu createEditMenu() {
 		JMenu menu = new JMenu("Edit");
 		menu.add(createDeleteItem());
+		menu.add(createUpdateItem());
 		return menu;
 	}
 	
-	/** Edit->Delete */
+	/** Menu Edit->Update */
+	private JMenuItem createUpdateItem(){
+		JMenuItem update = new JMenuItem("Update");
+		class MenuItemListener implements ActionListener{
+			public void actionPerformed(ActionEvent e){
+				updateAction();
+			}
+		}
+		ActionListener listener = new MenuItemListener();
+		update.addActionListener(listener);
+		return update;
+	}
+	
+	/** Update Action method */
+	private void updateAction(){
+		int selectedIndex = table.getSelectedRow();
+		if(selectedIndex >=0){
+			Player selectedPlayer =
+					WorldCupController.getInstance().getPlayers().get(selectedIndex);
+		
+			//Launch the Edit Player dialog
+			JFrame outerFrame = (JFrame)getRootPane().getParent();
+			AddPlayerDialog editPlayerDialog =
+					new AddPlayerDialog(outerFrame, "Edit Player", selectedPlayer);
+			editPlayerDialog.setSize(400,250);
+			editPlayerDialog.setLocationRelativeTo(null);
+			editPlayerDialog.setVisible(true);
+		}
+		else
+		{
+			JFrame outerFrame = new JFrame();
+			JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
+		}
+	}
+		
+	/** Menu Edit->Delete */
 	private JMenuItem createDeleteItem() {
 		JMenuItem delete = new JMenuItem("Delete");
 		class MenuItemListener implements ActionListener {	
@@ -147,25 +183,7 @@ public class WorldCupFrame extends JFrame{
 		editButton.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
-				int selectedIndex = table.getSelectedRow();
-				if(selectedIndex >=0){
-					Player selectedPlayer =
-							WorldCupController.getInstance().getPlayers().get(selectedIndex);
-				
-					//Launch the Edit Player dialog
-					JFrame outerFrame = (JFrame)getRootPane().getParent();
-					AddPlayerDialog editPlayerDialog =
-							new AddPlayerDialog(outerFrame, "Edit Player", selectedPlayer);
-					editPlayerDialog.setSize(400,250);
-					editPlayerDialog.setLocationRelativeTo(null);
-					editPlayerDialog.setVisible(true);
-					
-				}
-				else
-				{
-					JFrame outerFrame = new JFrame();
-					JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
-				}
+				updateAction();
 			}
 		});
 		
@@ -173,17 +191,7 @@ public class WorldCupFrame extends JFrame{
 		deleteButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				int selectedRow = table.getSelectedRow();
-				if(selectedRow >=0)
-				{
-					WorldCupController.getInstance().deletePlayer(selectedRow);
-				}
-				else
-				{
-					JFrame outerFrame = new JFrame();
-					JOptionPane.showMessageDialog(outerFrame, "Please Select a Contact");
-				}
-				
+				deleteAction();
 			}
 		});
 		
