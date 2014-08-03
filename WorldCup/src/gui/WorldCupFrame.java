@@ -12,14 +12,17 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -28,10 +31,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+
 import model.Player;
 import controller.WorldCupController;
 
 public class WorldCupFrame extends JFrame{
+	
+	private static final int FIELD_WIDTH = 450, FIELD_HEIGHT = 100;
 	
 	private JPanel mainPanel;
 	private JButton addButton;
@@ -41,31 +48,71 @@ public class WorldCupFrame extends JFrame{
 	private JButton cancelButton;
 	private JTable table;
 	private PlayerTableModel tableModel;
+	private JLabel sampleField, sampleImage;
 	
 	public WorldCupFrame (String title){
 		super(title);
 		this.mainPanel = new JPanel();
 		this.mainPanel.setLayout(new BorderLayout());
-		this.getContentPane().add(this.mainPanel);
+		this.getContentPane().add(this.mainPanel);	
 		
 		//Construct Menu
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		menuBar.add(createFileMenu());
 		menuBar.add(createEditMenu());
-
-		this.mainPanel.add(createSideButtonPanel(), BorderLayout.EAST);
-		this.mainPanel.add(createBottomPanel(), BorderLayout.SOUTH);
+		menuBar.add(createHelpMenu());
+		
+		sampleImage = new JLabel(new ImageIcon("world_cup.jpg"),SwingConstants.CENTER);
+		this.mainPanel.add(sampleImage, BorderLayout.NORTH);
+		
+		this.mainPanel.add(createBottomButtonPanel(), BorderLayout.SOUTH);
+		
 		this.mainPanel.add(createTable(WorldCupController.getInstance().getPlayers()), 
 				BorderLayout.CENTER);	
 	}
 	
-	/** File Drop Down Menu */
+	/** File Drop Down Menu *************/
 	private JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
 		menu.add(createFileExitItem());
 		return menu;
 	}
+	
+	/** Edit Drop Down Menu *************/
+	private JMenu createEditMenu() {
+		JMenu menu = new JMenu("Edit");
+		menu.add(createDeleteItem());
+		menu.add(createUpdateItem());
+		return menu;
+	}
+	
+	/** Help[ Drop Down Menu *************/
+	private JMenu createHelpMenu() {
+		JMenu menu = new JMenu("Help");
+		menu.add(createHelpItem());
+		return menu;
+	}
+	
+	/**
+	 * Creates the Help->Info menu item and sets its action listener.
+	 * @return the menu item
+	 */
+	public JMenuItem createHelpItem() {
+		JMenuItem info = new JMenuItem("Info");
+		info.setMnemonic('H');
+		info.setAccelerator(KeyStroke.getKeyStroke("ctrl H"));
+		class MenuItemListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				JFrame outerFrame = new JFrame();
+				JOptionPane.showMessageDialog(outerFrame, "This is the help section");
+			}
+		}
+		ActionListener listener = new MenuItemListener();
+		info.addActionListener(listener);
+		return info;
+	}
+	
 
 	/**
 	 * Creates the File->Exit menu item and sets its action listener.
@@ -89,15 +136,7 @@ public class WorldCupFrame extends JFrame{
 	private void exitAction(){
 		System.exit(0);
 	}
-	
-	/** Edit Drop Down Menu */
-	private JMenu createEditMenu() {
-		JMenu menu = new JMenu("Edit");
-		menu.add(createDeleteItem());
-		menu.add(createUpdateItem());
-		return menu;
-	}
-	
+
 	/** Menu Edit->Update */
 	private JMenuItem createUpdateItem(){
 		JMenuItem update = new JMenuItem("Update");
@@ -172,14 +211,14 @@ public class WorldCupFrame extends JFrame{
 		return scroller;
 	}
 	
-	private JPanel createSideButtonPanel(){
-		JPanel sideButtonPanel = new JPanel();
-		BoxLayout boxL = new BoxLayout(sideButtonPanel, BoxLayout.Y_AXIS);
-		sideButtonPanel.setLayout(boxL);
+	private JPanel createBottomButtonPanel(){
 		
-		addButton = new JButton("Add");
-		deleteButton = new JButton("Delete");
-		editButton = new JButton("Edit");
+		JPanel bottomButtonPanel = new JPanel();
+		
+		addButton = new JButton("Add", new ImageIcon("add.png"));
+		deleteButton = new JButton("Delete", new ImageIcon("delete.png"));
+		editButton = new JButton("Edit", new ImageIcon("edit.png"));
+		
 		editButton.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
@@ -187,7 +226,6 @@ public class WorldCupFrame extends JFrame{
 			}
 		});
 		
-		deleteButton = new JButton("Delete");
 		deleteButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
@@ -199,24 +237,16 @@ public class WorldCupFrame extends JFrame{
 		AddButtonListener addButtonL = new AddButtonListener(this);
 		addButton.addActionListener(addButtonL);
 		
-		sideButtonPanel.add(addButton);
-		sideButtonPanel.add(Box.createVerticalStrut(5));
-		sideButtonPanel.add(editButton);
-		sideButtonPanel.add(Box.createVerticalStrut(5));
-		sideButtonPanel.add(deleteButton);
+		bottomButtonPanel.add(addButton);
+		bottomButtonPanel.add(Box.createHorizontalStrut(5));
+		bottomButtonPanel.add(editButton);
+		bottomButtonPanel.add(Box.createHorizontalStrut(5));
+		bottomButtonPanel.add(deleteButton);
 		
-		return sideButtonPanel;
+		
+		return bottomButtonPanel;
 	}
 	
-	private JPanel createBottomPanel()
-	{
-		JPanel bottomPanel = new JPanel();
-		okButton = new JButton("OK");
-		cancelButton = new JButton("Cancel");
-		bottomPanel.add(okButton);
-		bottomPanel.add(cancelButton);
-		return bottomPanel;
-	}
 	
 	public void refreshTable()
 	{
