@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -27,6 +28,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 
 import model.Player;
 import controller.WorldCupController;
@@ -60,8 +62,39 @@ public class WorldCupFrame extends JFrame{
 				BorderLayout.CENTER);	
 	}
 	
+	
+	/** File Drop Down Menu */
+	private JMenu createFileMenu() {
+		JMenu menu = new JMenu("File");
+		menu.add(createFileExitItem());
+		return menu;
+	}
 
-	//Edit Menu
+	/**
+	 * Creates the File->Exit menu item and sets its action listener.
+	 * @return the menu item
+	 */
+	public JMenuItem createFileExitItem() {
+		JMenuItem exit = new JMenuItem("Exit", new ImageIcon("exit.gif"));
+		exit.setMnemonic('E');
+		exit.setAccelerator(KeyStroke.getKeyStroke("ctrl E"));
+		class MenuItemListener implements ActionListener {
+			public void actionPerformed(ActionEvent event) {
+				exitAction();
+			}
+		}
+		ActionListener listener = new MenuItemListener();
+		exit.addActionListener(listener);
+		return exit;
+	}
+	
+	/** Closes the application */
+	private void exitAction(){
+		System.exit(0);
+	}
+	
+
+	/** Edit Drop Down Menu */
 	private JMenu createEditMenu() {
 		JMenu menu = new JMenu("Edit");
 		menu.add(createDeleteItem());
@@ -89,29 +122,6 @@ public class WorldCupFrame extends JFrame{
 			}
 		});
 		return menu;
-	}
-
-
-	private JMenu createFileMenu() {
-		JMenu menu = new JMenu("File");
-		menu.add(createFileExitItem());
-		return menu;
-	}
-
-	/**
-	 * Creates the File->Exit menu item and sets its action listener.
-	 * @return the menu item
-	 */
-	public JMenuItem createFileExitItem() {
-		JMenuItem item = new JMenuItem("Exit");
-		class MenuItemListener implements ActionListener {
-			public void actionPerformed(ActionEvent event) {
-				System.exit(0);
-			}
-		}
-		ActionListener listener = new MenuItemListener();
-		item.addActionListener(listener);
-		return item;
 	}
 
 
