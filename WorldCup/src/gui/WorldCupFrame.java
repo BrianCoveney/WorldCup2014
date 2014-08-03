@@ -15,7 +15,6 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,7 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-
 import model.Player;
 import controller.WorldCupController;
 
@@ -62,7 +60,6 @@ public class WorldCupFrame extends JFrame{
 				BorderLayout.CENTER);	
 	}
 	
-	
 	/** File Drop Down Menu */
 	private JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
@@ -93,35 +90,39 @@ public class WorldCupFrame extends JFrame{
 		System.exit(0);
 	}
 	
-
 	/** Edit Drop Down Menu */
 	private JMenu createEditMenu() {
 		JMenu menu = new JMenu("Edit");
 		menu.add(createDeleteItem());
 		return menu;
 	}
-
-
-	//Edit->Delete
+	
+	/** Edit->Delete */
 	private JMenuItem createDeleteItem() {
-		JMenu menu = new JMenu("Delete");
-		
-		menu.addActionListener(new ActionListener(){
+		JMenuItem delete = new JMenuItem("Delete");
+		class MenuItemListener implements ActionListener {	
 			public void actionPerformed(ActionEvent e) {
-				int selectedRow = table.getSelectedRow();
-				if(selectedRow >=0)
-				{
-					WorldCupController.getInstance().deletePlayer(selectedRow);
-				}
-				else
-				{
-					JFrame outerFrame = new JFrame();
-					JOptionPane.showMessageDialog(outerFrame, "Please Select a Contact");
-				}
-				
+				deleteAction();
 			}
-		});
-		return menu;
+		}
+			
+		ActionListener listener = new MenuItemListener();
+		delete.addActionListener(listener);
+		return delete;
+	}
+	
+	/** Delete Action method */
+	private void deleteAction(){
+		int selectedRow = table.getSelectedRow();
+		if(selectedRow >=0)
+		{
+			WorldCupController.getInstance().deletePlayer(selectedRow);
+		}
+		else
+		{
+			JFrame outerFrame = new JFrame();
+			JOptionPane.showMessageDialog(outerFrame, "Please Select a Contact");
+		}
 	}
 
 
