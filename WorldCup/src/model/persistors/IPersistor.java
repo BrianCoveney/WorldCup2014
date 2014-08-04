@@ -12,16 +12,25 @@
 package model.persistors;
 
 import java.util.ArrayList;
-
 import model.Player;
+import model.Team;
 
 public interface IPersistor 
 {
 	public void write(ArrayList<Player> players);
-	public ArrayList<Player> read();
+	
+	public void writeTeam(ArrayList<Team> team);
+		
+	public ArrayList<Player> readPlayer();
+	
+	public ArrayList<Team> readTeam();
 	
 	public void delete(String name);
 	
 	public void update(String originalName, String newName, int newGoalsScorred);
+
+	public ArrayList<Team> getTeamForPlayer(String playerName);
+
+	public void addTeamForPlayer(Team newTeam);
 	
 }

@@ -39,7 +39,7 @@ public class PlayerTableModel extends DefaultTableModel{
 	public String getColumnName(int column){
 		if(column == NAME_COL)
 		{
-			return "Name";
+			return "Player Name";
 		}
 		else if(column == GOALS_COL)
 		{

@@ -14,8 +14,9 @@ package controller;
 import gui.WorldCupFrame;
 
 import java.util.ArrayList;
-
+import java.util.Date;
 import model.Player;
+import model.Team;
 import model.WorldCupModel;
 import model.persistors.IPersistor;
 
@@ -27,8 +28,8 @@ public class WorldCupController {
 	
 	private PersistanceMode persistanceMode;
 	
-	//THe persistor 
 	private IPersistor persistor;
+	
 	
 	public static WorldCupController getInstance(){
 		if(instance == null)
@@ -42,13 +43,16 @@ public class WorldCupController {
 	{
 		try{
 			
-			ArrayList<Player> players = this.persistor.read();
-			//Check that what was read out of the file was not null
-			if(players != null){
-				WorldCupModel dataModel = new WorldCupModel(players);
+			ArrayList<Player> players = this.persistor.readPlayer();
+			ArrayList<Team> team = this.persistor.readTeam();
+			
+			if(players != null)
+			{
+				WorldCupModel dataModel = new WorldCupModel(players, team);
 				this.setModel(dataModel);
 			}
-			else{
+			else
+			{
 				this.setModel((new WorldCupModel()));
 			}
 			
@@ -75,6 +79,8 @@ public class WorldCupController {
 		this.persistanceMode = persistanceMode;
 	}
 	
+	
+	
 	public void createNewPlayer(String name, int goalsScored){
 		Player newPlayer = null;
 		newPlayer = new Player(name, goalsScored);
@@ -99,11 +105,35 @@ public class WorldCupController {
 		}
 		this.view.refreshTable();
 	}
-	
-	public ArrayList<Player> getPlayers()
+
+	//Create New Team method****************
+	public void createNewTeam(String name, String teamName, int gamesWon)
 	{
-		return this.dataModel.getPlayers();
+		Team newTeam = null;
+		newTeam = new Team(name, teamName, gamesWon);
+				
+		this.dataModel.addTeam(newTeam);
+			
+		ArrayList<Team> contactWrapper = new ArrayList<Team>();
+		contactWrapper.add(newTeam);
+		this.persistor.writeTeam(contactWrapper);
+			
+		this.view.refreshTable();
+	}		
+	
+	//Add 
+	public void addTeamForPlayer(String playerName, String teamName, int gamesWon)
+	{
+		Team addTeam = 
+				new Team(playerName, teamName, gamesWon);
+			
+		this.persistor.addTeamForPlayer(addTeam);
+			
+		this.view.refreshTable();	
 	}
+	
+	
+	
 	
 	public void deletePlayer(int selectedIndex)
 	{
@@ -130,6 +160,22 @@ public class WorldCupController {
 		this.view.refreshTable();
 	}
 	
+	/** Team ****/
+	public ArrayList<Team> getTeam()
+	{
+		return this.dataModel.getTeam();
+	}
+	
+	/** Players ****/
+	public ArrayList<Player> getPlayers()
+	{
+		return this.dataModel.getPlayers();
+	}
+	
+	public ArrayList<Team> getTeamForPlayer(String playerName)
+	{
+		return this.persistor.getTeamForPlayer(playerName);
+	}
 }
 
 

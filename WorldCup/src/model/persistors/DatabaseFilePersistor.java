@@ -18,16 +18,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-
+import java.util.Calendar;
 import model.Player;
+import model.Team;
 
 public class DatabaseFilePersistor implements IPersistor{
 	
 	private Connection dbConnection;
 	private ArrayList<AutoCloseable> dbObjects;
 	
-	private static final String DB_NAME_COL = "name";
+	private static final String DB_PLAYER_NAME_COL = "PlayerName";
 	private static final String DB_GOALS_COL = "goals";
+	
+	private static final String DB_TEAM_COL = "TeamName";
+	private static final String DB_GAMES_WON_COL = "GamesWon";
 	
 	public DatabaseFilePersistor()
 	{
@@ -39,7 +43,7 @@ public class DatabaseFilePersistor implements IPersistor{
 					DriverManager.getConnection("jdbc:mysql://localhost:3308/worldcup?"+
 							"user=root&password=bossdog12"); //enter password
 			
-System.out.println("Database connection successful : "+dbConnection);
+			System.out.println("Database connection successful : "+dbConnection);
 			
 		}catch(ClassNotFoundException cfe){
 			System.out.println("ERROR 0: "+cfe.getMessage());
@@ -49,6 +53,7 @@ System.out.println("Database connection successful : "+dbConnection);
 		
 	}
 	
+	//Write Player method
 	public void write(ArrayList<Player> players){
 		try{
 			for(Player currPlayer : players)
@@ -70,6 +75,30 @@ System.out.println("Database connection successful : "+dbConnection);
 		}
 	}
 	
+	//Write Team method
+		public void writeTeam(ArrayList<Team> team)
+		{
+			try{
+				for(Team currTeam : team)
+				{
+					PreparedStatement prepStmt =
+					dbConnection.prepareStatement("INSERT into team_info values (? ,?, ?)");
+						
+					prepStmt.setString(1, currTeam.getPlayerName());
+					prepStmt.setString(2, currTeam.getTeamName());
+					prepStmt.setInt(3, currTeam.getGamesWon());
+						
+					prepStmt.executeUpdate();
+					dbObjects.add(prepStmt);
+				}
+				close();
+					
+			}catch(Exception ex)
+			{
+				System.out.println(ex.getMessage());
+			}
+		}
+	
 	public void close()
 	{
 		try{
@@ -83,7 +112,8 @@ System.out.println("Database connection successful : "+dbConnection);
 		}
 	}
 	
-	public ArrayList<Player> read()
+	/** Read Player **********/
+	public ArrayList<Player> readPlayer()
 	{
 		ArrayList<Player> players = new ArrayList<Player>();
 		try{
@@ -95,7 +125,7 @@ System.out.println("Database connection successful : "+dbConnection);
 			//Iterate through the result set
 			while(rs.next())
 			{
-				String currPlayerName = rs.getString(DB_NAME_COL);
+				String currPlayerName = rs.getString(DB_PLAYER_NAME_COL);
 				int currPlayerGoalsScorred = rs.getInt(DB_GOALS_COL);
 				
 				//Now re-create a Player instance and add it to the ArrayList
@@ -111,16 +141,97 @@ System.out.println("Database connection successful : "+dbConnection);
 		}
 	}
 	
-	public void delete(String name)
+	/** Read Team **********/
+	public ArrayList<Team> readTeam()
+	{
+		ArrayList<Team> team = new ArrayList<Team>();
+		try{
+			Statement getAllTeams = dbConnection.createStatement();
+			dbObjects.add(getAllTeams);
+			ResultSet rs = getAllTeams.executeQuery("SELECT * FROM team_info");
+			dbObjects.add(rs);
+			
+			//Iterate through the result set
+			while(rs.next())
+			{
+				String currPlayerName = rs.getString(DB_PLAYER_NAME_COL);
+				String currTeamName  = rs.getString(DB_TEAM_COL);
+				int currGamesWon = rs.getInt(DB_GAMES_WON_COL);
+				
+				Team recreatedTeam = new Team(currPlayerName, currTeamName, currGamesWon);
+			}
+			
+		}catch(Exception e){
+			e.getMessage();
+		}finally{
+			close();
+			return team;
+		}
+	}
+	
+	
+	//Get Call for Team method	
+		public ArrayList<Team>getTeamForPlayer(String playerName)
+		{
+			ArrayList<Team> team = new ArrayList<Team>();
+			try{
+				PreparedStatement getTeam
+					= dbConnection.prepareStatement("SELECT * FROM team_info WHERE PlayerName = ?");
+				getTeam.setString(1, playerName);
+				ResultSet rs = getTeam.executeQuery();
+					
+				while(rs.next())
+				{
+					String currPlayerName = rs.getString(DB_PLAYER_NAME_COL);
+					String currTeamName = rs.getString(DB_TEAM_COL);
+					int currGamesWon = rs.getInt(DB_GAMES_WON_COL);
+
+					Team tm = new Team(currPlayerName, currTeamName, currGamesWon);
+					team.add(tm);
+				}
+				getTeam.close();
+					rs.close();
+					
+			}catch(Exception ex){
+					System.out.println(ex.getMessage());
+			}finally{
+				return team;
+			}	
+		}
+		
+		
+		//Add Team for Player method
+		public void addTeamForPlayer(Team newTeam)
+		{
+			try{
+				PreparedStatement prepStmt =
+					dbConnection.prepareStatement("INSERT into team_info values (?, ?, ?)" );
+
+				
+				prepStmt.setString(1, newTeam.getPlayerName());
+				prepStmt.setString(2, newTeam.getTeamName());
+				prepStmt.setInt(3, newTeam.getGamesWon());
+						
+				prepStmt.executeUpdate();
+				dbObjects.add(prepStmt);
+				
+			}catch(Exception ex){
+				System.out.println(ex.getMessage());
+			}
+			finally{
+				close();
+			}
+		}
+
+	
+	public void delete(String playername)
 	{
 		try{
 			PreparedStatement deletePlayerStmt =
 					dbConnection.prepareStatement
-					("DELETE FROM PLAYERS WHERE name =?");
-					//DELETE from COMPETITOR WHERE name='john'
-					//DELETE from COMPETITOR WHERE goals=3
+					("DELETE FROM PLAYERS WHERE PlayerName =?");
 					dbObjects.add(deletePlayerStmt);
-					deletePlayerStmt.setString(1, name);
+					deletePlayerStmt.setString(1, playername);
 					deletePlayerStmt.executeUpdate();
 			
 		}catch(Exception ex){
@@ -134,7 +245,7 @@ System.out.println("Database connection successful : "+dbConnection);
 	{
 		try{
 		PreparedStatement prepStmt =
-				dbConnection.prepareStatement("UPDATE PLAYERS SET name=?, goals=? WHERE name=?");
+				dbConnection.prepareStatement("UPDATE PLAYERS SET PlayerName=?, goals=? WHERE PlayerName=?");
 				dbObjects.add(prepStmt);
 				prepStmt.setString(1, newName);
 				prepStmt.setInt(2, newGoalsScored);

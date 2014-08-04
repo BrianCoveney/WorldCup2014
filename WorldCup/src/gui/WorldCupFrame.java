@@ -16,7 +16,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -32,20 +31,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-
 import model.Player;
 import controller.WorldCupController;
 
 public class WorldCupFrame extends JFrame{
 	
-	private static final int FIELD_WIDTH = 450, FIELD_HEIGHT = 100;
-	
 	private JPanel mainPanel;
 	private JButton addButton;
 	private JButton editButton;
 	private JButton deleteButton;
-	private JButton okButton;
-	private JButton cancelButton;
+	private JButton showTeamButton;
 	private JTable table;
 	private PlayerTableModel tableModel;
 	private JLabel sampleField, sampleImage;
@@ -218,20 +213,48 @@ public class WorldCupFrame extends JFrame{
 		addButton = new JButton("Add", new ImageIcon("add.png"));
 		deleteButton = new JButton("Delete", new ImageIcon("delete.png"));
 		editButton = new JButton("Edit", new ImageIcon("edit.png"));
+		showTeamButton = new JButton("Team");
 		
 		editButton.addActionListener(new ActionListener(){
-			
 			public void actionPerformed(ActionEvent e){
 				updateAction();
 			}
 		});
 		
 		deleteButton.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
 				deleteAction();
 			}
 		});
+		
+		showTeamButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				
+				int selectedIndex = table.getSelectedRow();
+				if(selectedIndex >=0)
+				{
+					Player selectedPlayer = 
+							WorldCupController.getInstance().getPlayers().get(selectedIndex);
+							
+							//Launch the Add Competitor dialog
+							JFrame outerFrame = (JFrame)getRootPane().getParent();
+							ShowTeamDialog showTeamDialog = 
+										new ShowTeamDialog(outerFrame, "Team Info", 
+												selectedPlayer.getName());
+							showTeamDialog.setSize(450, 100);
+							showTeamDialog.setLocationRelativeTo(null);
+							showTeamDialog.setVisible(true);
+				}
+				else
+				{
+					JFrame outerFrame = new JFrame();
+					JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
+				}
+
+			}
+		
+		});
+		
 		
 		//Creating listeners 
 		AddButtonListener addButtonL = new AddButtonListener(this);
@@ -242,6 +265,8 @@ public class WorldCupFrame extends JFrame{
 		bottomButtonPanel.add(editButton);
 		bottomButtonPanel.add(Box.createHorizontalStrut(5));
 		bottomButtonPanel.add(deleteButton);
+		bottomButtonPanel.add(Box.createHorizontalStrut(5));
+		bottomButtonPanel.add(showTeamButton);
 		
 		
 		return bottomButtonPanel;
