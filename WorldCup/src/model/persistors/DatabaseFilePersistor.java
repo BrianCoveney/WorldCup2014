@@ -63,8 +63,7 @@ public class DatabaseFilePersistor implements IPersistor{
 						
 						prepStmt.setString(1, currPlayer.getName());
 						prepStmt.setInt(2, currPlayer.getGoalsScored());
-						
-						
+											
 						prepStmt.executeUpdate();
 						dbObjects.add(prepStmt);
 			}

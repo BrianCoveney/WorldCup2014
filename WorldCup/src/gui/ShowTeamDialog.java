@@ -22,11 +22,14 @@
 
 package gui;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -35,44 +38,45 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.TableModel;
 
-import model.Team;
 import controller.WorldCupController;
+import model.Team;
+
 
 public class ShowTeamDialog extends JDialog {
 	
-	private JComboBox<Team> TeamCombo;
+	private JComboBox<Team> teamCombo;
 	private JButton addTeamButton;
 	private JPanel mainPanel;
-	private String selectedPlayertName;
-	private String teamName;
-	private int gamesWon;
+	private String selectedPlayerName;
+	private int callDuration;
 	
-	public ShowTeamDialog(JFrame parent, String title, String selectedPlayertName)
+	public ShowTeamDialog(JFrame parent, String title, String selectedPlayerName)
 	{
 		super(parent, title);
 		this.mainPanel = new JPanel();
-		this.selectedPlayertName = selectedPlayertName;
-		this.teamName = teamName;
-		this.gamesWon = gamesWon;
+		this.selectedPlayerName = selectedPlayerName;
 		BoxLayout boxL = new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS);
 		this.mainPanel.setLayout(boxL);
 		this.getContentPane().add(this.mainPanel); 
-		this.mainPanel.add(createTeamComboPanel());
+		this.mainPanel.add(createCallComboPanel());
 
 	}
 
 
-	private JPanel createTeamComboPanel()
+	private JPanel createCallComboPanel()
 	{
-		JPanel TeamComboPanel = new JPanel();
+		JPanel teamComboPanel = new JPanel();
 		
-		TeamCombo = new JComboBox<Team>();
-		Dimension dim = TeamCombo.getPreferredSize(); // adjusting comboBox size.
-		TeamCombo.setPreferredSize(new Dimension(275, dim.height)); 
+		teamCombo = new JComboBox<Team>();
+//		Dimension dim = teamCombo.getPreferredSize(); // adjusting comboBox size.
+//		teamCombo.setPreferredSize(new Dimension(400, dim.height)); 
 		
 		populateTeamCombo();
-		TeamComboPanel.add(TeamCombo);
+		teamComboPanel.add(teamCombo);
 		
 		addTeamButton = new JButton("Add Team..");
 		addTeamButton.addActionListener(new ActionListener()
@@ -81,37 +85,54 @@ public class ShowTeamDialog extends JDialog {
 			{
 
 				try{
-					String selectedPlayertName = (JOptionPane.showInputDialog("Input Players Name :"));
-					String teamName = (JOptionPane.showInputDialog("Input Team Name :"));
-					int gamesWon = Integer.parseInt(JOptionPane.showInputDialog("Input Games Won :"));
+					String teamName = (JOptionPane.showInputDialog("Enter Team"));
+					int gamesWon = 
+							Integer.parseInt(JOptionPane.showInputDialog("Input Games Won :"));
 					
 					WorldCupController.getInstance().
-						addTeamForPlayer(selectedPlayertName, teamName, gamesWon);
+						addTeamForPlayer(selectedPlayerName, teamName, gamesWon);
 					
-					
-					
-				}catch(NumberFormatException ex){
+				}catch(Exception ex){
 					JFrame outerFrame = new JFrame();
-					JOptionPane.showConfirmDialog(outerFrame, "Please enter a Number");			
+					JOptionPane.showConfirmDialog(outerFrame, "Error");			
 				}
 				dispose();
 			}
 		});
 		
-		TeamComboPanel.add(addTeamButton);
-		return TeamComboPanel;
+		teamComboPanel.add(addTeamButton);
+		return teamComboPanel;
 	};
 		
 	
 	private void populateTeamCombo() 
 	{
-		TeamCombo.removeAll();
-		ArrayList<Team> TeamsForContact =
-				WorldCupController.getInstance().getTeamForPlayer(selectedPlayertName);
+		teamCombo.removeAll();
+		ArrayList<Team> teamForPlayer =
+				WorldCupController.getInstance().getTeamForPlayer(selectedPlayerName);
 		
-		for(Team currTeam : TeamsForContact)
+		for(Team currTeam : teamForPlayer)
 		{
-			TeamCombo.addItem(currTeam);
+			teamCombo.addItem(currTeam);
 		}
 	}		
-}//end ShowTeamsDialog class
+}//end ShowCallsDialog class
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

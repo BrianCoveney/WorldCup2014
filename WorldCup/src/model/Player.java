@@ -11,12 +11,14 @@
 
 package model;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Player {
 	
 	private String name;
 	private int goalsScored;
+	
+	private ArrayList<Team> teamInfo = new ArrayList<Team>();
 	
 	public Player(String name, int goalsScored){
 		this.name = name;
@@ -38,9 +40,15 @@ public class Player {
 	public void setGoalsScored(int goalsScored){
 		this.goalsScored = goalsScored;
 	}
-	
-	public String toString(){
-		return this.name + " " + this.goalsScored;
+
+	public ArrayList<Team> getTeamInfo() {
+		return teamInfo;
 	}
+
+	public void setTeamInfo(ArrayList<Team> teamInfo) {
+		this.teamInfo = teamInfo;
+	}
+	
+	
 
 }

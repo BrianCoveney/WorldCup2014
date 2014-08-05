@@ -1,10 +1,8 @@
 package model;
 
-import java.util.ArrayList;
 
 public class Team {
-
-	private ArrayList<Team> teamInfo = new ArrayList<Team>();
+	
 	private String teamName;
 	private String playerName;
 	private int gamesWon;
@@ -39,12 +37,13 @@ public class Team {
 		this.gamesWon = gamesWon;
 	}
 
-	public ArrayList<Team> getTeamInfo() {
-		return teamInfo;
+	@Override
+	public String toString() {
+		return "PLAYERS NAME: " +this.playerName + " | "
+				+"TEAM NAME: " + this.teamName + " | "
+				+"GAMES WON: " + this.gamesWon;
 	}
 
-	public void setTeamInfo(ArrayList<Team> teamInfo) {
-		this.teamInfo = teamInfo;
-	}
+	
 	
 }

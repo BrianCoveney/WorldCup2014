@@ -16,6 +16,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -32,6 +33,7 @@ import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import model.Player;
+
 import controller.WorldCupController;
 
 public class WorldCupFrame extends JFrame{
@@ -166,7 +168,7 @@ public class WorldCupFrame extends JFrame{
 			JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
 		}
 	}
-		
+	
 	/** Menu Edit->Delete */
 	private JMenuItem createDeleteItem() {
 		JMenuItem delete = new JMenuItem("Delete");
@@ -206,6 +208,8 @@ public class WorldCupFrame extends JFrame{
 		return scroller;
 	}
 	
+	
+	
 	private JPanel createBottomButtonPanel(){
 		
 		JPanel bottomButtonPanel = new JPanel();
@@ -213,23 +217,11 @@ public class WorldCupFrame extends JFrame{
 		addButton = new JButton("Add", new ImageIcon("add.png"));
 		deleteButton = new JButton("Delete", new ImageIcon("delete.png"));
 		editButton = new JButton("Edit", new ImageIcon("edit.png"));
-		showTeamButton = new JButton("Team");
 		
-		editButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				updateAction();
-			}
-		});
-		
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				deleteAction();
-			}
-		});
-		
+		showTeamButton = new JButton("Team", new ImageIcon("football.png"));
 		showTeamButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				
+			public void actionPerformed(ActionEvent e)
+			{
 				int selectedIndex = table.getSelectedRow();
 				if(selectedIndex >=0)
 				{
@@ -241,18 +233,29 @@ public class WorldCupFrame extends JFrame{
 							ShowTeamDialog showTeamDialog = 
 										new ShowTeamDialog(outerFrame, "Team Info", 
 												selectedPlayer.getName());
-							showTeamDialog.setSize(450, 100);
-							showTeamDialog.setLocationRelativeTo(null);
-							showTeamDialog.setVisible(true);
+					showTeamDialog.setSize(450, 100);
+					showTeamDialog.setLocationRelativeTo(null);
+					showTeamDialog.setVisible(true);
 				}
 				else
 				{
 					JFrame outerFrame = new JFrame();
-					JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
+					JOptionPane.showMessageDialog(outerFrame, "Please Select a Contact");
 				}
 
 			}
+		});
 		
+		editButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				updateAction();
+			}
+		});
+		
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteAction();
+			}
 		});
 		
 		

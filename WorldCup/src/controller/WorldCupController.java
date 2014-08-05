@@ -58,11 +58,10 @@ public class WorldCupController {
 			
 		}catch(Exception e){
 			System.out.println(e.getMessage());
-			//Defaulting the model to blank if an exception happens
-			this.setModel(new WorldCupModel());
 		}
 	}
 	
+	//Setters for Model, Persistor, PersistorMode and View
 	private void setModel(WorldCupModel dataModel){
 		this.dataModel = dataModel;
 	}
@@ -79,30 +78,38 @@ public class WorldCupController {
 		this.persistanceMode = persistanceMode;
 	}
 	
+	//Getters for Player and Team
+	
+	public ArrayList<Player> getPlayers()
+	{
+		return this.dataModel.getPlayers();
+	}
+	
+	public ArrayList<Team> getTeam()
+	{
+		return this.dataModel.getTeam();
+	}
+		
+	public ArrayList<Team> getTeamForPlayer(String playerName)
+	{
+		return this.persistor.getTeamForPlayer(playerName);
+	}
 	
 	
+	//Create New Player method
 	public void createNewPlayer(String name, int goalsScored){
+		
 		Player newPlayer = null;
 		newPlayer = new Player(name, goalsScored);
 		
 		this.dataModel.addPlayer(newPlayer);
-		switch(this.persistanceMode)
-		{
-			//For a serialize file get the extire list from the model and
-			//write out a fresh copy
-			case FILE :
-			{
-				this.persistor.write(getPlayers()); break;
-			}
-			case DATABASE :
-			{
+		
 				//For a database just insert the new player
 				ArrayList<Player> playerWrapper = new ArrayList<Player>();
 				playerWrapper.add(newPlayer);
 				this.persistor.write(playerWrapper);
-				break;
-			}
-		}
+			
+		
 		this.view.refreshTable();
 	}
 
@@ -111,13 +118,14 @@ public class WorldCupController {
 	{
 		Team newTeam = null;
 		newTeam = new Team(name, teamName, gamesWon);
-				
+		
 		this.dataModel.addTeam(newTeam);
-			
-		ArrayList<Team> contactWrapper = new ArrayList<Team>();
-		contactWrapper.add(newTeam);
-		this.persistor.writeTeam(contactWrapper);
-			
+		
+				//For a database just insert the new player
+				ArrayList<Team> teamWrapper = new ArrayList<Team>();
+				teamWrapper.add(newTeam);
+				this.persistor.writeTeam(teamWrapper);
+	
 		this.view.refreshTable();
 	}		
 	
@@ -160,22 +168,7 @@ public class WorldCupController {
 		this.view.refreshTable();
 	}
 	
-	/** Team ****/
-	public ArrayList<Team> getTeam()
-	{
-		return this.dataModel.getTeam();
-	}
-	
-	/** Players ****/
-	public ArrayList<Player> getPlayers()
-	{
-		return this.dataModel.getPlayers();
-	}
-	
-	public ArrayList<Team> getTeamForPlayer(String playerName)
-	{
-		return this.persistor.getTeamForPlayer(playerName);
-	}
+
 }
 
 

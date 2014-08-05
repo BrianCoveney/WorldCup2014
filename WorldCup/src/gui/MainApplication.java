@@ -24,7 +24,8 @@ public class MainApplication {
 	public static void main(String[] args){
 		
 		   WorldCupController.getInstance().setPersistor(new DatabaseFilePersistor());
-		   WorldCupController.getInstance().setPersistanceMode(PersistanceMode.DATABASE);
+		   
+		   
 		   WorldCupController.getInstance().init();
 
 //This is creating and displaying the GUI (View)
