@@ -232,6 +232,12 @@ public class DatabaseFilePersistor implements IPersistor{
 					dbObjects.add(deletePlayerStmt);
 					deletePlayerStmt.setString(1, playername);
 					deletePlayerStmt.executeUpdate();
+					
+			PreparedStatement deleteTeamStmt =
+					dbConnection.prepareStatement("DELETE FROM team_info where PlayerName=?");
+			dbObjects.add(deleteTeamStmt);
+			deleteTeamStmt.setString(1, playername);
+			deleteTeamStmt.executeUpdate();
 			
 		}catch(Exception ex){
 			System.out.println("ERROR 5:"+ex.getMessage());

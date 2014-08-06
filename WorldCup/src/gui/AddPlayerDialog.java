@@ -28,18 +28,14 @@ import controller.WorldCupController;
 public class AddPlayerDialog extends JDialog{
 	
 	private enum Mode {ADD, EDIT};
-	
 	private JPanel mainPanel;
 	private JLabel nameLabel;
 	private JTextField nameField;
 	private JLabel goalLabel;
 	private JTextField goalField;
-	
 	private JButton okButton;
 	private JButton cancelButton;
-	
 	private Mode dialogMode;
-	
 	private Player playerBeingEdited;
 	
 	
