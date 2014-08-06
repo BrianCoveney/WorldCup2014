@@ -14,30 +14,40 @@ package model;
 import java.util.ArrayList;
 
 public class Player {
-	
-	private String name;
+
+	private String playerName;
+	private String playerPosition;
 	private int goalsScored;
-	
+
 	private ArrayList<Team> teamInfo = new ArrayList<Team>();
-	
-	public Player(String name, int goalsScored){
-		this.name = name;
+
+	public Player(String playerName, String playerPosition, int goalsScored) {
+		this.playerName = playerName;
+		this.playerPosition = playerPosition;
 		this.goalsScored = goalsScored;
 	}
-	
-	public String getName(){
-		return this.name;
+
+	public String getName() {
+		return this.playerName;
 	}
-	
-	public void setName(String name){
-		this.name = name;
+
+	public void setName(String playerName) {
+		this.playerName = playerName;
 	}
-	
-	public int getGoalsScored(){
+
+	public String getPlayerPosition() {
+		return playerPosition;
+	}
+
+	public void setPlayerPosition(String playerPosition) {
+		this.playerPosition = playerPosition;
+	}
+
+	public int getGoalsScored() {
 		return this.goalsScored;
 	}
-	
-	public void setGoalsScored(int goalsScored){
+
+	public void setGoalsScored(int goalsScored) {
 		this.goalsScored = goalsScored;
 	}
 
@@ -48,7 +58,5 @@ public class Player {
 	public void setTeamInfo(ArrayList<Team> teamInfo) {
 		this.teamInfo = teamInfo;
 	}
-	
-	
 
 }

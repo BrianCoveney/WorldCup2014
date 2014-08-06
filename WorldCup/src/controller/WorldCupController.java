@@ -97,10 +97,10 @@ public class WorldCupController {
 	
 	
 	//Create New Player method
-	public void createNewPlayer(String name, int goalsScored){
+	public void createNewPlayer(String playerName, String playerPosistion, int goalsScored){
 		
 		Player newPlayer = null;
-		newPlayer = new Player(name, goalsScored);
+		newPlayer = new Player(playerName, playerPosistion, goalsScored);
 		
 		this.dataModel.addPlayer(newPlayer);
 		
@@ -153,7 +153,7 @@ public class WorldCupController {
 		this.view.refreshTable();
 	}
 	
-	public void updatePlayer(String originalName, String newName, int newGoalsScorred)
+	public void updatePlayer(String originalName, String newName, String newPlayerPosistion, int newGoalsScorred)
 	{
 		//Search model for someone who has the originalName
 		for(Player currPlayer : this.dataModel.getPlayers())
@@ -161,10 +161,11 @@ public class WorldCupController {
 			if(currPlayer.getName().equals(originalName))
 			{
 				currPlayer.setName(newName);
+				currPlayer.setPlayerPosition(newPlayerPosistion);
 				currPlayer.setGoalsScored(newGoalsScorred);
 			}
 		}
-		this.persistor.update(originalName, newName, newGoalsScorred);
+		this.persistor.update(originalName, newName, newPlayerPosistion, newGoalsScorred);
 		this.view.refreshTable();
 	}
 	

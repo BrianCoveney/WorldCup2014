@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Calendar;
+
 import model.Player;
 import model.Team;
 
@@ -28,6 +29,7 @@ public class DatabaseFilePersistor implements IPersistor{
 	private ArrayList<AutoCloseable> dbObjects;
 	
 	private static final String DB_PLAYER_NAME_COL = "PlayerName";
+	private static final String DB_PLAYER_POSITION_COL = "PlayerPosition";
 	private static final String DB_GOALS_COL = "goals";
 	
 	private static final String DB_TEAM_COL = "TeamName";
@@ -59,10 +61,11 @@ public class DatabaseFilePersistor implements IPersistor{
 			for(Player currPlayer : players)
 			{
 				PreparedStatement prepStmt = 
-						dbConnection.prepareStatement("INSERT into PLAYERS values (? ,?)");
+						dbConnection.prepareStatement("INSERT into PLAYERS values (? ,?, ?)");
 						
 						prepStmt.setString(1, currPlayer.getName());
-						prepStmt.setInt(2, currPlayer.getGoalsScored());
+						prepStmt.setString(2, currPlayer.getPlayerPosition());
+						prepStmt.setInt(3, currPlayer.getGoalsScored());
 											
 						prepStmt.executeUpdate();
 						dbObjects.add(prepStmt);
@@ -125,10 +128,12 @@ public class DatabaseFilePersistor implements IPersistor{
 			while(rs.next())
 			{
 				String currPlayerName = rs.getString(DB_PLAYER_NAME_COL);
+				String currPlayerPosition = rs.getString(DB_PLAYER_POSITION_COL);
 				int currPlayerGoalsScorred = rs.getInt(DB_GOALS_COL);
 				
 				//Now re-create a Player instance and add it to the ArrayList
-				Player recreatedPlayer = new Player(currPlayerName, currPlayerGoalsScorred);
+				Player recreatedPlayer = new Player
+						(currPlayerName, currPlayerPosition, currPlayerGoalsScorred);
 				players.add(recreatedPlayer);
 			}
 			
@@ -246,15 +251,16 @@ public class DatabaseFilePersistor implements IPersistor{
 		}
 	}
 	
-	public void update(String originalName, String newName, int newGoalsScored)
+	public void update(String originalName, String newName, String newPlayerPosition, int newGoalsScored)
 	{
 		try{
 		PreparedStatement prepStmt =
-				dbConnection.prepareStatement("UPDATE PLAYERS SET PlayerName=?, goals=? WHERE PlayerName=?");
+				dbConnection.prepareStatement("UPDATE PLAYERS SET PlayerName=?, PlayerPosition=? goals=? WHERE PlayerName=?");
 				dbObjects.add(prepStmt);
 				prepStmt.setString(1, newName);
-				prepStmt.setInt(2, newGoalsScored);
-				prepStmt.setString(3, originalName);
+				prepStmt.setString(2, newPlayerPosition);
+				prepStmt.setInt(3, newGoalsScored);
+				prepStmt.setString(4, originalName);
 				
 				prepStmt.executeUpdate();
 		}catch(Exception ex){
@@ -264,6 +270,7 @@ public class DatabaseFilePersistor implements IPersistor{
 			close();
 		}
 	}
+
 
 }
 

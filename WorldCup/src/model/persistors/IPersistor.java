@@ -12,6 +12,7 @@
 package model.persistors;
 
 import java.util.ArrayList;
+
 import model.Player;
 import model.Team;
 
@@ -27,7 +28,7 @@ public interface IPersistor
 	
 	public void delete(String name);
 	
-	public void update(String originalName, String newName, int newGoalsScorred);
+	public void update(String originalName, String newName, String newPlayerPosition, int newGoalsScored);
 
 	public ArrayList<Team> getTeamForPlayer(String playerName);
 
