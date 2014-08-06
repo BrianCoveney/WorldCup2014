@@ -27,7 +27,7 @@ public class MainApplication {
 		   
 		   WorldCupController.getInstance().init();
 
-//This is creating and displaying the GUI (View)
+		   //This is creating and displaying the GUI (View)
 		   WorldCupFrame worldFrame = 
 				new WorldCupFrame("World Cup 2014");
 			worldFrame.setSize(400, 450);
