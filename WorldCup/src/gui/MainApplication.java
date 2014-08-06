@@ -14,7 +14,6 @@ package gui;
 import javax.swing.JFrame;
 
 import model.persistors.DatabaseFilePersistor;
-import controller.PersistanceMode;
 import controller.WorldCupController;
 
 
