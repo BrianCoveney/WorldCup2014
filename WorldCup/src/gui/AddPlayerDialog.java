@@ -75,7 +75,7 @@ public class AddPlayerDialog extends JDialog{
 	private JPanel createPlayerPositionPanel() {
 		JPanel playerPosPanel = new JPanel();
 		playerPositionLabel = new JLabel("Player Position: ");
-		playerPositionField = new JTextField(30);
+		playerPositionField = new JTextField(10);
 		playerPosPanel.add(playerPositionLabel);
 		playerPosPanel.add(playerPositionField);
 		return playerPosPanel;
@@ -85,7 +85,7 @@ public class AddPlayerDialog extends JDialog{
 	private JPanel createNamePanel(){
 		JPanel namePanel = new JPanel();
 		nameLabel = new JLabel("Name: ");
-		nameField = new JTextField(30);
+		nameField = new JTextField(20);
 		namePanel.add(nameLabel);
 		namePanel.add(nameField);
 		return namePanel;
@@ -106,11 +106,12 @@ public class AddPlayerDialog extends JDialog{
 		okButton.addActionListener(new ActionListener(){
 			
 			public void actionPerformed(ActionEvent e){
+				
 				if(dialogMode == Mode.ADD){
 					WorldCupController.getInstance().
-						createNewPlayer(nameField.getText(), playerPositionField.getText(),
-								
+						createNewPlayer(nameField.getText(), playerPositionField.getText(),	
 								Integer.parseInt(goalField.getText()));
+					
 				}else if(dialogMode == Mode.EDIT){
 					WorldCupController.getInstance().updatePlayer(
 							playerBeingEdited.getName(),

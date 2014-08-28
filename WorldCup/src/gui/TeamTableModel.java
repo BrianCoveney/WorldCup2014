@@ -1,3 +1,14 @@
+/*********************************************
+ * Title: World Cup 2014
+ * 
+ * Date: Summer 2014
+ *
+ * Author: 
+ * Brian Coveney  
+ * CS Student at Cork Institute of Technology
+ *
+ ********************************************/
+
 package gui;
 
 import java.util.ArrayList;

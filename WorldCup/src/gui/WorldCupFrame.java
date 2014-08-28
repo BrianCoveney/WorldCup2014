@@ -1,17 +1,18 @@
-/********************************************
+/*********************************************
  * Title: World Cup 2014
  * 
- * Date: 06/07/2014
+ * Date: Summer 2014
  *
  * Author: 
  * Brian Coveney  
  * CS Student at Cork Institute of Technology
  *
- *******************************************/
+ ********************************************/
 
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +33,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
-import model.Player;
 
+import model.Player;
+import model.Team;
 import controller.WorldCupController;
 
 public class WorldCupFrame extends JFrame{
@@ -43,8 +45,11 @@ public class WorldCupFrame extends JFrame{
 	private JButton editButton;
 	private JButton deleteButton;
 	private JButton showTeamButton;
-	private JTable table;
+	
+	private JTable table, teamTable;
 	private PlayerTableModel tableModel;
+	private TeamTableModel teamTableModel;
+	
 	private JLabel sampleField, sampleImage;
 	
 	public WorldCupFrame (String title){
@@ -67,8 +72,32 @@ public class WorldCupFrame extends JFrame{
 		
 		this.mainPanel.add(createTable(WorldCupController.getInstance().getPlayers()), 
 				BorderLayout.CENTER);	
+		
+		/*this.mainPanel.add(createTeamTable(WorldCupController.getInstance().getTeam()), 
+				BorderLayout.EAST);*/
 	}
 	
+	//Table for Player
+	private JScrollPane createTable(ArrayList<Player> players){
+		table = new JTable();
+		tableModel = new PlayerTableModel(players);
+		table.setModel(tableModel);
+		
+		JScrollPane scroller = new JScrollPane(table);
+		refreshTable();
+		return scroller;
+	}
+	
+	//Table for Team
+	/*private JScrollPane createTeamTable(ArrayList<Team> team) {
+		teamTable = new JTable();
+		teamTableModel = new TeamTableModel(team);
+		teamTable.setModel(teamTableModel);
+		
+		JScrollPane scroller = new JScrollPane(teamTable);
+		return scroller;	
+	}*/
+
 	/** File Drop Down Menu *************/
 	private JMenu createFileMenu() {
 		JMenu menu = new JMenu("File");
@@ -193,22 +222,10 @@ public class WorldCupFrame extends JFrame{
 		else
 		{
 			JFrame outerFrame = new JFrame();
-			JOptionPane.showMessageDialog(outerFrame, "Please Select a Contact");
+			JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
 		}
 	}
 
-
-
-	private JScrollPane createTable(ArrayList<Player> players){
-		table = new JTable();
-		tableModel = new PlayerTableModel(players);
-		table.setModel(tableModel);
-		
-		JScrollPane scroller = new JScrollPane(table);
-		return scroller;
-	}
-	
-	
 	
 	private JPanel createBottomButtonPanel(){
 		
@@ -240,7 +257,7 @@ public class WorldCupFrame extends JFrame{
 				else
 				{
 					JFrame outerFrame = new JFrame();
-					JOptionPane.showMessageDialog(outerFrame, "Please Select a Contact");
+					JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
 				}
 
 			}
@@ -292,7 +309,7 @@ public class WorldCupFrame extends JFrame{
 			//Launch the Add Player dialog
 			AddPlayerDialog addPlayerDialog =
 					new AddPlayerDialog(outerFrame, "Add Player");
-			addPlayerDialog.setSize(400,250);
+			addPlayerDialog.setSize(300,200);
 			addPlayerDialog.setLocationRelativeTo(null);
 			addPlayerDialog.setVisible(true);
 			

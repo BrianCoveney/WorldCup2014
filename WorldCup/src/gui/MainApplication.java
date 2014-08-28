@@ -30,7 +30,7 @@ public class MainApplication {
 		   //This is creating and displaying the GUI (View)
 		   WorldCupFrame worldFrame = 
 				new WorldCupFrame("World Cup 2014");
-			worldFrame.setSize(600, 600);
+			worldFrame.setSize(400, 500);
 			worldFrame.setLocationRelativeTo(null);
 			worldFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			worldFrame.setVisible(true);

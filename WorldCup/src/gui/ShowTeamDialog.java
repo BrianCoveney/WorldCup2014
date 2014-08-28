@@ -1,24 +1,13 @@
- /***************************************************************************
- * Title: Phone Information Application 
+/*********************************************
+ * Title: World Cup 2014
  * 
- * Java Packages & Files: 
- * 
- * controller 		 - PersistanceMode & PhoneInfoController. 
- * gui   			 - AddContact, ContactTable Model, MainAppicationDB, 
- * 					   PhoneInfoFrame & ShowTeamsDialog. 
- * model  			 - Team, Contact & PhoneInfoModel.
- * model.persistors  - DatabaseFilePersistor, DBPersistorTester & IPersistor.
+ * Date: Summer 2014
  *
- * Date: 08/05/2014
+ * Author: 
+ * Brian Coveney  
+ * CS Student at Cork Institute of Technology
  *
- * Author: Brian Coveney  Student Id: R00105727
- *
- * About this:
- * -----------
- * 
- * ShowTeamsDialog - creating Dialog Box for adding and displaying Team(s)
- *
-  **************************************************************************/
+ ********************************************/ 
 
 package gui;
 
