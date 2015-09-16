@@ -42,7 +42,7 @@ public class DatabaseFilePersistor implements IPersistor{
 			Class.forName("com.mysql.jdbc.Driver");
 			
 			dbConnection=
-					DriverManager.getConnection("jdbc:mysql://localhost:3308/worldcup?"+
+					DriverManager.getConnection("jdbc:mysql://localhost:3306/worldcup?"+
 							"user=root&password=bossdog12"); //enter password
 			
 			System.out.println("Database connection successful : "+dbConnection);
@@ -255,7 +255,7 @@ public class DatabaseFilePersistor implements IPersistor{
 	{
 		try{
 		PreparedStatement prepStmt =
-				dbConnection.prepareStatement("UPDATE PLAYERS SET PlayerName=?, PlayerPosition=? goals=? WHERE PlayerName=?");
+				dbConnection.prepareStatement("UPDATE PLAYERS SET PlayerName=?, PlayerPosition=?, goals=? WHERE PlayerName=?");
 				dbObjects.add(prepStmt);
 				prepStmt.setString(1, newName);
 				prepStmt.setString(2, newPlayerPosition);
@@ -264,7 +264,7 @@ public class DatabaseFilePersistor implements IPersistor{
 				
 				prepStmt.executeUpdate();
 		}catch(Exception ex){
-			System.out.println("ERROR 5:"+ex.getMessage());
+			System.out.println("ERROR 6:"+ex.getMessage());
 		}
 		finally{
 			close();
