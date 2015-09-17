@@ -11,10 +11,14 @@
 
 package gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -22,6 +26,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
 
 import model.Player;
 import controller.WorldCupController;
@@ -72,12 +78,20 @@ public class AddPlayerDialog extends JDialog{
 		dialogMode = Mode.ADD;
 	}
 	
+	
 	private JPanel createPlayerPositionPanel() {
 		JPanel playerPosPanel = new JPanel();
 		playerPositionLabel = new JLabel("Player Position: ");
-		playerPositionField = new JTextField(10);
+
+		playerPositionLabel.setBorder(BorderFactory.createCompoundBorder(
+				new EmptyBorder(10, 10, 10, 20), new EtchedBorder()));
+		
+		playerPositionField = new JTextField();
+		playerPositionField.setPreferredSize(new Dimension( 115, 20 ));
+		
 		playerPosPanel.add(playerPositionLabel);
 		playerPosPanel.add(playerPositionField);
+
 		return playerPosPanel;
 	}
 
@@ -85,20 +99,26 @@ public class AddPlayerDialog extends JDialog{
 	private JPanel createNamePanel(){
 		JPanel namePanel = new JPanel();
 		nameLabel = new JLabel("Name: ");
-		nameField = new JTextField(20);
+		nameLabel.setBorder(BorderFactory.createCompoundBorder(
+				new EmptyBorder(10, 10, 10, 85), new EtchedBorder()));
+		nameField = new JTextField(10);
 		namePanel.add(nameLabel);
 		namePanel.add(nameField);
 		return namePanel;
 	}
 	
+	
 	private JPanel createGoalsPanel(){
 		JPanel goalPanel = new JPanel();
 		goalLabel = new JLabel("Goals Scored: ");
+		goalLabel.setBorder(BorderFactory.createCompoundBorder(
+				new EmptyBorder(10, 10, 10, 33), new EtchedBorder()));
 		goalField = new JTextField(10);
 		goalPanel.add(goalLabel);
 		goalPanel.add(goalField);
 		return goalPanel;
 	}
+	
 	
 	private JPanel createButtonPanel(){
 		JPanel buttonPanel = new JPanel();
@@ -123,7 +143,17 @@ public class AddPlayerDialog extends JDialog{
 		});
 		cancelButton = new JButton("Cancel");
 		buttonPanel.add(okButton);
+		buttonPanel.add(Box.createHorizontalStrut(5));
 		buttonPanel.add(cancelButton);
+		
+		cancelButton.addActionListener(new ActionListener(){ 
+			
+			public void actionPerformed(ActionEvent e){
+				dispose();
+			}
+			
+		});
+		
 		return buttonPanel;
 		
 		

@@ -51,12 +51,12 @@ public class ShowTeamDialog extends JDialog {
 		BoxLayout boxL = new BoxLayout(this.mainPanel, BoxLayout.Y_AXIS);
 		this.mainPanel.setLayout(boxL);
 		this.getContentPane().add(this.mainPanel); 
-		this.mainPanel.add(createCallComboPanel());
+		this.mainPanel.add(createTeamComboPanel());
 
 	}
 
 
-	private JPanel createCallComboPanel()
+	private JPanel createTeamComboPanel()
 	{
 		JPanel teamComboPanel = new JPanel();
 		

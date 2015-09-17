@@ -12,14 +12,11 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -185,9 +182,11 @@ public class WorldCupFrame extends JFrame{
 		
 			//Launch the Edit Player dialog
 			JFrame outerFrame = (JFrame)getRootPane().getParent();
+			
+			
 			AddPlayerDialog editPlayerDialog =
 					new AddPlayerDialog(outerFrame, "Edit Player", selectedPlayer);
-			editPlayerDialog.setSize(400,250);
+			editPlayerDialog.setSize(380,250);
 			editPlayerDialog.setLocationRelativeTo(null);
 			editPlayerDialog.setVisible(true);
 		}
@@ -240,7 +239,7 @@ public class WorldCupFrame extends JFrame{
 			public void actionPerformed(ActionEvent e)
 			{
 				int selectedIndex = table.getSelectedRow();
-				if(selectedIndex >=0)
+				if(selectedIndex >= 0)
 				{
 					Player selectedPlayer = 
 							WorldCupController.getInstance().getPlayers().get(selectedIndex);
@@ -309,7 +308,7 @@ public class WorldCupFrame extends JFrame{
 			//Launch the Add Player dialog
 			AddPlayerDialog addPlayerDialog =
 					new AddPlayerDialog(outerFrame, "Add Player");
-			addPlayerDialog.setSize(300,200);
+			addPlayerDialog.setSize(380,250);
 			addPlayerDialog.setLocationRelativeTo(null);
 			addPlayerDialog.setVisible(true);
 			
