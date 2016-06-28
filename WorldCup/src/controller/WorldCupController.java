@@ -97,21 +97,44 @@ public class WorldCupController {
 	
 	
 	//Create New Player method
-	public void createNewPlayer(String playerName, String playerPosistion, int goalsScored){
-		
-		Player newPlayer = null;
-		newPlayer = new Player(playerName, playerPosistion, goalsScored);
-		
-		this.dataModel.addPlayer(newPlayer);
+	public void createNewFieldPlayer(String playerName, String playerPosistion, int goalsScored, int goalsSaved){
+
+		Player newPlayer1 = null;
+		newPlayer1 = Player.createFieldPlayer(playerName, playerPosistion, goalsScored, goalsSaved);
+
+
+
+		this.dataModel.addPlayer(newPlayer1);
 		
 				//For a database just insert the new player
 				ArrayList<Player> playerWrapper = new ArrayList<Player>();
-				playerWrapper.add(newPlayer);
-				this.persistor.write(playerWrapper);
-			
-		
+				playerWrapper.add(newPlayer1);
+
+		this.persistor.write(playerWrapper);
+
+
 		this.view.refreshTable();
 	}
+
+
+    //Create New Player method
+    public void createNewGoaliePlayer(String playerName, String playerPosistion, int goalsSaved){
+
+        Player newPlayer2 = null;
+        newPlayer2 = Player.createGoalie(playerName, playerPosistion, goalsSaved);
+
+        this.dataModel.addPlayer(newPlayer2);
+
+        //For a database just insert the new player
+        ArrayList<Player> playerWrapper = new ArrayList<Player>();
+        playerWrapper.add(newPlayer2);
+
+        this.persistor.write(playerWrapper);
+
+
+        this.view.refreshTable();
+    }
+
 
 	//Create New Team method****************
 	public void createNewTeam(String name, String teamName, int gamesWon)
@@ -153,7 +176,7 @@ public class WorldCupController {
 		this.view.refreshTable();
 	}
 	
-	public void updatePlayer(String originalName, String newName, String newPlayerPosistion, int newGoalsScorred)
+	public void updatePlayer(String originalName, String newName, String newPlayerPosistion, int newGoalsScorred, int newGoalsSaved)
 	{
 		//Search model for someone who has the originalName
 		for(Player currPlayer : this.dataModel.getPlayers())
@@ -163,12 +186,14 @@ public class WorldCupController {
 				currPlayer.setName(newName);
 				currPlayer.setPlayerPosition(newPlayerPosistion);
 				currPlayer.setGoalsScored(newGoalsScorred);
+                currPlayer.setGoalsSaved(newGoalsSaved);
 			}
 		}
-		this.persistor.update(originalName, newName, newPlayerPosistion, newGoalsScorred);
+		this.persistor.update(originalName, newName, newPlayerPosistion, newGoalsScorred, newGoalsSaved);
 		this.view.refreshTable();
 	}
-	
+
+
 
 }
 

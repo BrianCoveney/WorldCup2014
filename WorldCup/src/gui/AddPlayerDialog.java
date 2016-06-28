@@ -17,15 +17,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -42,6 +34,9 @@ public class AddPlayerDialog extends JDialog{
 	
 	private JLabel playerPositionLabel;
 	private JTextField playerPositionField;
+
+    private JLabel goalSavedLabel;
+    private JTextField goalSavedField;
 	
 	private JLabel goalLabel;
 	private JTextField goalField;
@@ -50,6 +45,8 @@ public class AddPlayerDialog extends JDialog{
 	private JButton cancelButton;
 	private Mode dialogMode;
 	private Player playerBeingEdited;
+
+    private static final int DEFAULT_VALUE = 0;
 	
 	
 	public AddPlayerDialog(JFrame parent, String title, Player p)
@@ -59,6 +56,7 @@ public class AddPlayerDialog extends JDialog{
 		this.nameField.setText(p.getName());
 		this.playerPositionField.setText(p.getPlayerPosition());
 		this.goalField.setText(Integer.toString(p.getGoalsScored()));
+        this.goalSavedField.setText(Integer.toString(p.getGoalsSaved()));
 		dialogMode = Mode.EDIT;
 	}
 	
@@ -74,6 +72,7 @@ public class AddPlayerDialog extends JDialog{
 		this.mainPanel.add(createNamePanel());
 		this.mainPanel.add(createPlayerPositionPanel());
 		this.mainPanel.add(createGoalsPanel());
+        this.mainPanel.add(createGoalsSavedPanel());
 		this.mainPanel.add(createButtonPanel());
 		dialogMode = Mode.ADD;
 	}
@@ -106,6 +105,18 @@ public class AddPlayerDialog extends JDialog{
 		namePanel.add(nameField);
 		return namePanel;
 	}
+
+
+	private JPanel createGoalsSavedPanel(){
+		JPanel goalSavedPanel = new JPanel();
+		goalSavedLabel = new JLabel("Goals Saved: ");
+		goalSavedLabel.setBorder(BorderFactory.createCompoundBorder(
+				new EmptyBorder(10, 10, 10, 33), new EtchedBorder()));
+		goalSavedField = new JTextField(10);
+        goalSavedPanel.add(goalSavedLabel);
+        goalSavedPanel.add(goalSavedField);
+		return goalSavedPanel;
+	}
 	
 	
 	private JPanel createGoalsPanel(){
@@ -122,21 +133,32 @@ public class AddPlayerDialog extends JDialog{
 	
 	private JPanel createButtonPanel(){
 		JPanel buttonPanel = new JPanel();
+        goalField.setText(String.valueOf(DEFAULT_VALUE));
+        goalSavedField.setText(String.valueOf(DEFAULT_VALUE));
 		okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener(){
-			
+
 			public void actionPerformed(ActionEvent e){
-				
+
 				if(dialogMode == Mode.ADD){
+
+                    if(goalSavedField.getText().isEmpty() || goalField.getText().isEmpty()){
+                        JOptionPane.showMessageDialog(mainPanel, "Fields cannot be null");
+                        System.exit(0);
+                    }
+
 					WorldCupController.getInstance().
-						createNewPlayer(nameField.getText(), playerPositionField.getText(),	
-								Integer.parseInt(goalField.getText()));
-					
+						createNewFieldPlayer(nameField.getText(),
+                                        playerPositionField.getText(),
+                                        Integer.parseInt(goalField.getText()),
+                                        Integer.parseInt(goalSavedField.getText()));
+
 				}else if(dialogMode == Mode.EDIT){
 					WorldCupController.getInstance().updatePlayer(
 							playerBeingEdited.getName(),
 							nameField.getText(), playerPositionField.getText(),
-							Integer.parseInt(goalField.getText()));
+                            Integer.parseInt(goalField.getText()),
+                            Integer.parseInt(goalSavedField.getText()));
 				}
 				dispose();
 			}
@@ -146,13 +168,7 @@ public class AddPlayerDialog extends JDialog{
 		buttonPanel.add(Box.createHorizontalStrut(5));
 		buttonPanel.add(cancelButton);
 		
-		cancelButton.addActionListener(new ActionListener(){ 
-			
-			public void actionPerformed(ActionEvent e){
-				dispose();
-			}
-			
-		});
+		cancelButton.addActionListener(e -> dispose());
 		
 		return buttonPanel;
 		

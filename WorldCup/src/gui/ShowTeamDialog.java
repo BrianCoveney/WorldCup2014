@@ -61,8 +61,6 @@ public class ShowTeamDialog extends JDialog {
 		JPanel teamComboPanel = new JPanel();
 		
 		teamCombo = new JComboBox<Team>();
-//		Dimension dim = teamCombo.getPreferredSize(); // adjusting comboBox size.
-//		teamCombo.setPreferredSize(new Dimension(400, dim.height)); 
 		
 		populateTeamCombo();
 		teamComboPanel.add(teamCombo);

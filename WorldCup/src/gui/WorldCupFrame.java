@@ -11,11 +11,13 @@
 
 package gui;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,12 +44,14 @@ public class WorldCupFrame extends JFrame{
 	private JButton editButton;
 	private JButton deleteButton;
 	private JButton showTeamButton;
-	
+    private final static int BUTTON_HEIGHT = 30;
+    private final static int BUTTON_WIDTH = 100;
+
 	private JTable table, teamTable;
 	private PlayerTableModel tableModel;
 	private TeamTableModel teamTableModel;
 	
-	private JLabel sampleField, sampleImage;
+	private JLabel logoImage;
 	
 	public WorldCupFrame (String title){
 		super(title);
@@ -62,13 +66,22 @@ public class WorldCupFrame extends JFrame{
 		menuBar.add(createEditMenu());
 		menuBar.add(createHelpMenu());
 		
-		sampleImage = new JLabel(new ImageIcon("world_cup.jpg"),SwingConstants.CENTER);
-		this.mainPanel.add(sampleImage, BorderLayout.NORTH);
+
+        try {
+            Image bgrImg = ImageIO.read(getClass().getResource("/images/world_cup.jpg"));
+            logoImage = new JLabel(new ImageIcon(bgrImg),SwingConstants.CENTER);
+        }catch (IOException ioe){
+            ioe.printStackTrace();
+        }
+
+		this.mainPanel.add(logoImage, BorderLayout.NORTH);
 		
 		this.mainPanel.add(createBottomButtonPanel(), BorderLayout.SOUTH);
 		
 		this.mainPanel.add(createTable(WorldCupController.getInstance().getPlayers()), 
-				BorderLayout.CENTER);	
+				BorderLayout.CENTER);
+
+        this.mainPanel.setBackground(Color.WHITE);
 		
 		/*this.mainPanel.add(createTeamTable(WorldCupController.getInstance().getTeam()), 
 				BorderLayout.EAST);*/
@@ -121,7 +134,7 @@ public class WorldCupFrame extends JFrame{
 	 * Creates the Help->Info menu item and sets its action listener.
 	 * @return the menu item
 	 */
-	public JMenuItem createHelpItem() {
+	private JMenuItem createHelpItem() {
 		JMenuItem info = new JMenuItem("Info");
 		info.setMnemonic('H');
 		info.setAccelerator(KeyStroke.getKeyStroke("ctrl H"));
@@ -141,7 +154,7 @@ public class WorldCupFrame extends JFrame{
 	 * Creates the File->Exit menu item and sets its action listener.
 	 * @return the menu item
 	 */
-	public JMenuItem createFileExitItem() {
+	private JMenuItem createFileExitItem() {
 		JMenuItem exit = new JMenuItem("Exit", new ImageIcon("exit.gif"));
 		exit.setMnemonic('E');
 		exit.setAccelerator(KeyStroke.getKeyStroke("ctrl E"));
@@ -229,51 +242,66 @@ public class WorldCupFrame extends JFrame{
 	private JPanel createBottomButtonPanel(){
 		
 		JPanel bottomButtonPanel = new JPanel();
-		
-		addButton = new JButton("Add", new ImageIcon("add.png"));
-		deleteButton = new JButton("Delete", new ImageIcon("delete.png"));
-		editButton = new JButton("Edit", new ImageIcon("edit.png"));
-		
-		showTeamButton = new JButton("Team", new ImageIcon("football.png"));
-		showTeamButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
-				int selectedIndex = table.getSelectedRow();
-				if(selectedIndex >= 0)
-				{
-					Player selectedPlayer = 
-							WorldCupController.getInstance().getPlayers().get(selectedIndex);
-							
-							//Launch the Add Competitor dialog
-							JFrame outerFrame = (JFrame)getRootPane().getParent();
-							ShowTeamDialog showTeamDialog = 
-										new ShowTeamDialog(outerFrame, "Team Info", 
-												selectedPlayer.getName());
-					showTeamDialog.setSize(450, 100);
-					showTeamDialog.setLocationRelativeTo(null);
-					showTeamDialog.setVisible(true);
-				}
-				else
-				{
-					JFrame outerFrame = new JFrame();
-					JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
-				}
 
-			}
-		});
-		
-		editButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				updateAction();
-			}
-		});
-		
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				deleteAction();
-			}
-		});
-		
+        // Creating JButtons and adding text
+		addButton = new JButton("Add");
+		deleteButton = new JButton("Delete");
+		editButton = new JButton("Edit");
+		showTeamButton = new JButton("Team");
+
+        // Checking for the correct image file path.
+		try {
+			Image addImg = ImageIO.read(getClass().getResource("/images/add.png"));
+			addButton.setIcon(new ImageIcon(addImg));
+			Image delImg = ImageIO.read(getClass().getResource("/images/delete.png"));
+			deleteButton.setIcon(new ImageIcon(delImg));
+			Image editImg = ImageIO.read(getClass().getResource("/images/edit.png"));
+			editButton.setIcon(new ImageIcon(editImg));
+			Image showTm = ImageIO.read(getClass().getResource("/images/football.png"));
+			showTeamButton.setIcon(new ImageIcon(showTm));
+		}catch (IOException ioe){
+			ioe.printStackTrace();
+		}
+
+		// Set Button size
+		addButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+
+
+		// Listeners
+		showTeamButton.addActionListener(e -> {
+            int selectedIndex = table.getSelectedRow();
+            if(selectedIndex >= 0)
+            {
+                Player selectedPlayer =
+                        WorldCupController.getInstance().getPlayers().get(selectedIndex);
+
+                        //Launch the Add Competitor dialog
+                        JFrame outerFrame = (JFrame)getRootPane().getParent();
+                        ShowTeamDialog showTeamDialog =
+                                    new ShowTeamDialog(outerFrame, "Team Info",
+                                            selectedPlayer.getName());
+                showTeamDialog.setSize(600, 100);
+                showTeamDialog.setLocationRelativeTo(null);
+                showTeamDialog.setVisible(true);
+            }
+            else
+            {
+                JFrame outerFrame = new JFrame();
+                JOptionPane.showMessageDialog(outerFrame, "Please Select a Player");
+            }
+
+        });
+
+
+
+        // Replacing classic listener code --anonymous class is used to handle click event
+        // with Java 8 Lamabda, see:
+        // http://www.codejava.net/java-core/the-java-language/java-8-lambda-listener-example
+
+		editButton.addActionListener(e -> updateAction());
+
+        deleteButton.addActionListener(e -> deleteAction());
+
 		
 		//Creating listeners 
 		AddButtonListener addButtonL = new AddButtonListener(this);

@@ -17,13 +17,14 @@ import model.Player;
 
 public class PlayerTableModel extends DefaultTableModel{
 	
-	private static final int NO_OF_COLS  = 3;
+	private static final int NO_OF_COLS  = 4;
 	
 	//These are the indices of the table columns
 	private static final int NAME_COL = 0;
 	private static final int PLAYER_POS_COL = 1;
 	private static final int GOALS_COL = 2;
-	
+	private static final int GOALS_SAVED_COL = 3;
+
 	private ArrayList<Player> players;
 	
 	public PlayerTableModel(ArrayList<Player> players)
@@ -46,6 +47,10 @@ public class PlayerTableModel extends DefaultTableModel{
 		else if(column == PLAYER_POS_COL)
 		{
 			return "Player Position";
+		}
+		else if(column == GOALS_SAVED_COL)
+		{
+			return "Goals Saved";
 		}
 		else if(column == GOALS_COL)
 		{
@@ -80,6 +85,10 @@ public class PlayerTableModel extends DefaultTableModel{
 			else if(col == PLAYER_POS_COL)
 			{
 				return playerToGet.getPlayerPosition();
+			}
+			else if(col == GOALS_SAVED_COL)
+			{
+				return playerToGet.getGoalsSaved();
 			}
 			else if(col == GOALS_COL)
 			{

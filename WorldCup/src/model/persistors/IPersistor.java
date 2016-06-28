@@ -19,16 +19,16 @@ import model.Team;
 public interface IPersistor 
 {
 	public void write(ArrayList<Player> players);
-	
+
 	public void writeTeam(ArrayList<Team> team);
-		
+
 	public ArrayList<Player> readPlayer();
-	
+
 	public ArrayList<Team> readTeam();
-	
+
 	public void delete(String name);
-	
-	public void update(String originalName, String newName, String newPlayerPosition, int newGoalsScored);
+
+	public void update(String originalName, String newName, String newPlayerPosition, int newGoalsScored, int newGoalsSaved);
 
 	public ArrayList<Team> getTeamForPlayer(String playerName);
 

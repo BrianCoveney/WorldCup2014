@@ -18,14 +18,26 @@ public class Player {
 	private String playerName;
 	private String playerPosition;
 	private int goalsScored;
+    private int goalsSaved;
 
 	private ArrayList<Team> teamInfo = new ArrayList<Team>();
 
-	public Player(String playerName, String playerPosition, int goalsScored) {
+	public Player(String playerName, String playerPosition, int goalsScored, int goalsSaved) {
 		this.playerName = playerName;
 		this.playerPosition = playerPosition;
 		this.goalsScored = goalsScored;
+        this.goalsSaved = goalsSaved;
 	}
+
+    public static Player createFieldPlayer(String playerName, String playerPosition, int goalsScored, int goalsSaved){
+        return new Player(playerName, playerPosition, goalsScored, goalsSaved);
+    }
+
+    public static Player createGoalie(String playerName, String playerPosition, int goalsSaved){
+        return new Player(playerName, playerPosition, goalsSaved, 0);
+    }
+
+
 
 	public String getName() {
 		return this.playerName;
@@ -51,7 +63,12 @@ public class Player {
 		this.goalsScored = goalsScored;
 	}
 
-	public ArrayList<Team> getTeamInfo() {
+
+    public int getGoalsSaved() {return goalsSaved;}
+
+    public void setGoalsSaved(int goalsSaved) {this.goalsSaved = goalsSaved;}
+
+    public ArrayList<Team> getTeamInfo() {
 		return teamInfo;
 	}
 
