@@ -1,8 +1,9 @@
 WorldCup2014
 ============
 
-This is a Java Swing CRUD application, and these are the MySql tables:
+This is a Java Swing CRUD application.
 
+The MySQL database name is `worldcup` and these are the tables:
 
 ```
   CREATE TABLE players (
