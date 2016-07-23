@@ -16,7 +16,7 @@ The MySQL database name is `worldcup` and these are the tables:
     PlayerName varchar(255) NOT NULL,
     PlayerPosition varchar(45) DEFAULT NULL,
     goals varchar(10) DEFAULT NULL,
-    goals_saved varchar(10) DEFAULT NULL
+    goals_saved varchar(10) DEFAULT NULL,
     PRIMARY KEY (PlayerName)
   ) ENGINE=InnoDB;
 ```
